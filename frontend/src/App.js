@@ -163,11 +163,32 @@ function App() {
   };
 
   const testNotification = () => {
-    showNotification(
-      "🔔 Reminder Test",
-      "This is how your reminders will look!",
-      "🔔"
-    );
+    if (dashboardData) {
+      const hasGithubCommits = dashboardData.github?.has_commits_today;
+      const hasLeetcodeSolved = dashboardData.leetcode?.potd_solved;
+      
+      let title = "🔔 Code Tracker Reminder";
+      let body = "";
+      
+      if (!hasGithubCommits && !hasLeetcodeSolved) {
+        body = "You haven't made any commits or solved today's LeetCode POTD! Time to get coding! 💻🧠";
+      } else if (!hasGithubCommits) {
+        body = "No GitHub commits today! Time to push some code! 💻";
+      } else if (!hasLeetcodeSolved) {
+        body = `Today's LeetCode POTD '${dashboardData.leetcode.potd_title}' is waiting for you! 🧠`;
+      } else {
+        title = "✅ Great Job!";
+        body = "You've completed both GitHub commits and LeetCode POTD today! Keep up the excellent work! 🎉";
+      }
+      
+      showNotification(title, body, "🔔");
+    } else {
+      showNotification(
+        "🔔 Reminder Test",
+        "This is how your reminders will look!",
+        "🔔"
+      );
+    }
   };
 
   const StatusIcon = ({ status, platform }) => {
