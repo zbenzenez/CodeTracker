@@ -29,6 +29,7 @@ function App() {
 
   useEffect(() => {
     checkNotificationPermission();
+    registerServiceWorker();
     fetchDashboard();
     fetchTriggers();
     
@@ -36,6 +37,17 @@ function App() {
     const interval = setInterval(fetchDashboard, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const registerServiceWorker = async () => {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register('/sw.js');
+        console.log('Service Worker registered:', registration);
+      } catch (error) {
+        console.error('Service Worker registration failed:', error);
+      }
+    }
+  };
 
   const checkNotificationPermission = () => {
     if ('Notification' in window) {
